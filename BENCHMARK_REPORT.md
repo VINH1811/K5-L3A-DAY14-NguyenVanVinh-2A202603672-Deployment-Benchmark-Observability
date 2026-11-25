@@ -1,6 +1,7 @@
 # Benchmark & Observability Report — Day 14
 
 **Họ tên:** Nguyễn Văn Vinh
+**MSSV:** 2A202603672
 **Ngày chạy:** 25/11/2026
 **Môi trường:** Windows 11 + WSL2 Ubuntu 22.04, Intel Core i9-12900H (WSL thấy 20 CPU / 7,7 GB RAM), Docker 29.1.2, Python 3.11.18. Mỗi container agent bị giới hạn 0,5 CPU / 256 MB.
 

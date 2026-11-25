@@ -283,3 +283,10 @@ Dừng Redis: /health 200 · /ready 503 · /ask 503 (mất ~4 s)
 Cách ráp: `/ask` đi qua API key (401) → rate limit (429) → ngân sách (402) → LLM → ghi chi phí. Rate limit là sliding window trong Redis sorted set, chạy bằng Lua nên vẫn đúng khi 2 worker xử lý đồng thời. Redis lỗi thì `/ask` trả 503 thay vì bỏ qua giới hạn.
 
 Part 7: xem `BENCHMARK_REPORT.md`.
+## AI log
+
+Tôi dùng trợ lý AI trong bài này như sau.
+
+| Phần | Đã hỏi gì | Nhận được gì | Tự sửa / tự kiểm tra |
+|---|---|---|---|
+| Chuẩn bị | Đọc đề, lập lộ trình, cài môi trường | Hướng dẫn cài WSL2, Python 3.11 và thứ tự làm bài | Tôi tự cài và kiểm tra phiên bản Python |
