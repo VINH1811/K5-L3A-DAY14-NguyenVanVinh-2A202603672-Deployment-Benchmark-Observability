@@ -94,8 +94,9 @@ POST http://localhost/ask    -> 200 {"answer":"Tôi là AI agent được deploy
 
 ### Exercise 3.1 / 3.2: Deployment
 
-- URL: **CHƯA DEPLOY** (cập nhật cùng `DEPLOYMENT.md`)
-- Screenshot: chưa có
+- Nền tảng chính: Render (Exercise 3.2), deploy agent Part 6
+- URL: https://day14-agent-lwfp.onrender.com
+- Screenshot: [dashboard](screenshots/dashboard.png), [running](screenshots/running.png), [test](screenshots/test.png)
 
 ### So sánh `railway.toml` và `render.yaml`
 
