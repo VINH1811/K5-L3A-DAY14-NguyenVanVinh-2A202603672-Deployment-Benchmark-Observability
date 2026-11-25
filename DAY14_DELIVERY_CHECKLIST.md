@@ -183,12 +183,12 @@ your-repo/
 
 - [x] Repository is public (or instructor has access)
 - [ ] `MISSION_ANSWERS.md` completed with all exercises
-- [ ] `DEPLOYMENT.md` has working public URL
+- [x] `DEPLOYMENT.md` has working public URL
 - [x] All source code in `app/` directory
 - [x] `README.md` has clear setup instructions
 - [x] No `.env` file committed (only `.env.example`)
 - [x] No hardcoded secrets in code
-- [ ] Public URL is accessible and working
+- [x] Public URL is accessible and working
 - [ ] Screenshots included in `screenshots/` folder
 - [x] Repository has clear commit history
 - [x] `python check_production_ready.py` → `PASS 12/12`
