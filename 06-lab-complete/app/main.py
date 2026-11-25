@@ -5,10 +5,11 @@ import sys
 import time
 from contextlib import asynccontextmanager
 from datetime import datetime, timezone
+from pathlib import Path
 
 import redis
 from fastapi import Depends, FastAPI, HTTPException, Request
-from fastapi.responses import JSONResponse
+from fastapi.responses import FileResponse, JSONResponse
 from pydantic import BaseModel, Field
 
 from app.auth import verify_api_key
@@ -89,6 +90,15 @@ async def handle_redis_error(_: Request, exc: redis.RedisError):
 class AskRequest(BaseModel):
     question: str = Field(..., min_length=1, max_length=2000)
     user_id: str | None = Field(default=None, max_length=100)
+
+
+INDEX_HTML = Path(__file__).parent / "static" / "index.html"
+
+
+@app.get("/", include_in_schema=False)
+def index():
+    """Giao diện chat; trang công khai, /ask vẫn yêu cầu API key."""
+    return FileResponse(INDEX_HTML)
 
 
 @app.get("/health")

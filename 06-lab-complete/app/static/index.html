@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Day 14 Agent</title>
+<style>
+  :root { color-scheme: light dark; --bg:#f4f6f5; --card:#fff; --text:#17201c; --muted:#5d6b64; --line:#d8dfdb; --accent:#0b6b4f; --on-accent:#fff; --bad:#b3261e; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#111614; --card:#1a211e; --text:#e8eeeb; --muted:#9aa8a1; --line:#313b36; --accent:#4cc79b; --on-accent:#08251b; --bad:#ff8a80; } }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font:16px/1.5 system-ui,sans-serif; }
+  main { max-width:720px; height:100dvh; margin:auto; padding:16px; display:flex; flex-direction:column; gap:12px; }
+  header { display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; }
+  h1 { font-size:1.25rem; margin:0; }
+  #status, .meta { color:var(--muted); font-size:.85rem; }
+  input, textarea, button { font:inherit; border-radius:8px; border:1px solid var(--line); padding:10px 12px; background:var(--card); color:var(--text); }
+  input { width:100%; }
+  button { background:var(--accent); color:var(--on-accent); border:0; cursor:pointer; font-weight:600; }
+  button:disabled { opacity:.6; cursor:default; }
+  #log { flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:10px; }
+  .msg { max-width:85%; padding:10px 14px; border-radius:12px; background:var(--card); border:1px solid var(--line); overflow-wrap:anywhere; }
+  .user { align-self:flex-end; background:var(--accent); color:var(--on-accent); border:0; }
+  .error { color:var(--bad); border-color:var(--bad); }
+  form { display:flex; gap:8px; }
+  textarea { flex:1; min-width:0; resize:none; }
+</style>
+</head>
+<body>
+<main>
+  <header><h1>Day 14 Agent</h1><span id="status" role="status">Đang kiểm tra…</span></header>
+  <label>API key (chỉ giữ trong tab này, không lưu lại)
+    <input id="key" type="password" autocomplete="off" placeholder="X-API-Key">
+  </label>
+  <div id="log" aria-live="polite"></div>
+  <form id="form">
+    <textarea id="question" rows="2" maxlength="2000" required aria-label="Câu hỏi" placeholder="Ví dụ: Docker là gì?"></textarea>
+    <button id="send">Gửi</button>
+  </form>
+</main>
+<script>
+const $ = id => document.getElementById(id);
+
+function add(text, kind, meta) {
+  const el = document.createElement("div");
+  el.className = "msg " + kind;
+  el.textContent = text;               // textContent: không thực thi HTML trong câu trả lời
+  if (meta) {
+    const m = document.createElement("div");
+    m.className = "meta";
+    m.textContent = meta;
+    el.append(m);
+  }
+  $("log").append(el);
+  el.scrollIntoView({ block: "end" });
+}
+
+function errorText(res) {
+  const wait = res.headers.get("retry-after");
+  return {
+    401: "API key thiếu hoặc không đúng.",
+    402: "Đã hết ngân sách hôm nay.",
+    422: "Câu hỏi không hợp lệ (1–2000 ký tự).",
+    429: "Gửi quá nhanh. Thử lại sau " + (wait || 60) + " giây.",
+    503: "Dịch vụ tạm thời chưa sẵn sàng.",
+  }[res.status] || "Có lỗi xảy ra (HTTP " + res.status + ").";
+}
+
+async function checkReady() {
+  try {
+    const res = await fetch("/ready");
+    $("status").textContent = res.ok ? "● Sẵn sàng" : "○ Chưa sẵn sàng";
+  } catch {
+    $("status").textContent = "○ Mất kết nối";
+  }
+}
+
+$("form").addEventListener("submit", async event => {
+  event.preventDefault();
+  const question = $("question").value.trim();
+  if (!question || $("send").disabled) return;
+  if (!$("key").value.trim()) { add("Hãy nhập API key trước.", "error"); $("key").focus(); return; }
+  add(question, "user");
+  $("send").disabled = true;
+  const start = performance.now();
+  try {
+    const res = await fetch("/ask", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-API-Key": $("key").value.trim() },
+      body: JSON.stringify({ question }),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      add(data.answer, "agent", Math.round(performance.now() - start) + " ms · $" + data.cost_usd.toFixed(8));
+      $("question").value = "";
+    } else {
+      add(errorText(res), "error");
+    }
+  } catch {
+    add("Không gọi được máy chủ. Hãy thử lại.", "error");
+  } finally {
+    $("send").disabled = false;
+    $("question").focus();
+  }
+});
+
+$("question").addEventListener("keydown", event => {
+  if (event.key === "Enter" && !event.shiftKey && !event.isComposing) {
+    event.preventDefault();
+    $("form").requestSubmit();
+  }
+});
+
+checkReady();
+</script>
+</body>
+</html>
