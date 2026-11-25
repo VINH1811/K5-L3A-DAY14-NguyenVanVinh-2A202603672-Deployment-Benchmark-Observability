@@ -2,7 +2,7 @@
 
 ## Public URL
 
-https://day14-agent-lwfp.onrender.com
+https://day14-agent-lwfp.onrender.com (giao diện chat ở `/`, tài liệu API ở `/docs`)
 
 ## Platform
 
@@ -21,7 +21,7 @@ curl -sS -o /dev/null -w '%{http_code}\n' -X POST "$BASE/ask" -H 'Content-Type: 
 curl -sS -o /dev/null -w '%{http_code}\n' -X POST "$BASE/ask" -H 'Content-Type: application/json' -H "X-API-Key: $AGENT_API_KEY" -d '{"question":"Hello"}'   # 200
 ```
 
-Kết quả đã chạy ngày 25/11/2026: `/health` 200, `/ready` 200, `/ask` không có key 401, `/ask` có key: _(chờ điền)_
+Kết quả đã chạy ngày 25/11/2026: `/health` 200, `/ready` 200, `/ask` không có key 401, `/ask` sai key 401, `/ask` có key trả lời thành công (200), xác nhận qua giao diện chat ở `screenshots/test.png`
 
 ## Environment Variables Set
 

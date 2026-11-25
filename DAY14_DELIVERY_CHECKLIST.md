@@ -189,7 +189,7 @@ your-repo/
 - [x] No `.env` file committed (only `.env.example`)
 - [x] No hardcoded secrets in code
 - [x] Public URL is accessible and working
-- [ ] Screenshots included in `screenshots/` folder
+- [x] Screenshots included in `screenshots/` folder
 - [x] Repository has clear commit history
 - [x] `python check_production_ready.py` → `PASS 12/12`
 - [x] `BENCHMARK_REPORT.md` điền đủ, có `reports/`, `benchmark-results/` và screenshot Part 7
